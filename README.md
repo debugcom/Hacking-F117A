@@ -7,7 +7,7 @@ My investigation into mission generation in the Stealth Fighter games by Micropr
 
 ### Background
 
-Two of my favorite DOS games are F-19 Stealth Fighter and its 1991 remake F-117A Nighthawk Stealth Fighter 2.0. Both games come in heavy boxes, each packed with a thick manual offering a wealth of detailed information. As a pilot, you can choose to fly air-to-air missions or strike missions, and the manual hints at a special type of strike mission - the secret airstrip. The objective is to land at a secret airstrip behind enemy lines to drop off or pickup equipment, then safely fly home. This is an excerpt from the manual, which can be found here [F19](https://archive.org/stream/f19stealthfightermanual/F19-StealthFighter-Manual_djvu.txt) and 
+Two of my favorite DOS games are F-19 Stealth Fighter and its 1991 remake F-117A Nighthawk Stealth Fighter 2.0. Both games come in heavy boxes, each packed with a thick manual offering a wealth of detailed information. As a pilot, you can choose to fly air-to-air missions or strike missions, and the manual hints at a special type of strike mission - the secret airstrip. The objective is to land at a secret airstrip behind enemy lines to drop off or pickup equipment, then safely fly home. This is an excerpt from the manual, which can be found here [F-19](https://archive.org/stream/f19stealthfightermanual/F19-StealthFighter-Manual_djvu.txt) and 
 here [F-117A](https://archive.org/stream/f117Astealthfightermanual/F-117AStealthFighter-Manual_djvu.txt).
 
 > Instead, a secret airstrip challenges your flying skill. You must manage a landing without an ILS to guide you. Worse, the strip is only half the length of a normal runway. You must land gently, at low speed (under 160 kts, preferably), and touchdown near the start. Otherwise you'll roll off the other end and crash! To make matters worse, the strip's lights are only for a limited time.
@@ -25,7 +25,7 @@ However, in the F-117A manual, the locations of the secret airstrips have been o
 
 ### Hacking the mission
 
-The offered missions are generated randomly, and if your intention is to fly the secret airstrip mission, you would normally have to decline the offered mission repeatedly until the right combination is offered. As I found out, it appears to be quite rare (or else I was extremely unlucky), because I was not offered this mission after declining repeatedly (upwards of 20 minutes) - long enough for me to feel bored and sleepy. What would it take to reliably generate the secret airstrip mission, so you could play it on demand?
+The missions are generated randomly, and if your intention is to fly the secret airstrip, you would normally have to decline the offered mission repeatedly until the right combination is presented. As I found out, it appears to be quite rare (or else I was extremely unlucky), because I was not offered this mission after declining repeatedly (upwards of 20 minutes) - long enough for me to feel bored and sleepy. What would it take to reliably generate the secret airstrip mission, so you could play it on demand?
 
 Of the two games, I started hacking around with F-117A, since it was the newer and prettier of the two. The first step was to hack the memory contents using Cheat Engine. With carefull planning and scanning of memory addresses, declining the mission, then scanning again, I was able to identify two potential locations called the Primary Target and Secondary Target. By sequentially incrementing the byte at these two locations, and then observing the effects in-game, I was able to identify the hex values for the secret airstrips:
 ```
@@ -33,7 +33,7 @@ Of the two games, I started hacking around with F-117A, since it was the newer a
   Persian Gulf	18 and 19
   North Cape	1E and 1F
 ```
-However, simply plugging these hex values into the Primary or Secondary Target addresses was not good enough. When you do so, you often end up seeing missions like "Photograph the Airstrip" or "Destroy the Airstrip". Clearly there are other mission parameters which control the overall mission objectives. After more scanning of changed memory values, I found more addresses which contributed in some way to the overall mission:
+However, simply plugging these hex values into the Primary or Secondary Target addresses was not good enough. When you do so, you often end up seeing missions like "Photograph the Airstrip" or "Destroy the Airstrip". Clearly there are other mission parameters which control the overall mission objectives. After more scanning of changed memory values, I found additional addresses which contributed in some way to the overall mission:
 ```
   Primary Mission Type - see mission_type
   Primary Mission Target - enter the hex values for the desired target here
@@ -48,11 +48,11 @@ However, simply plugging these hex values into the Primary or Secondary Target a
   enum mission_type {
       photograph = 1,
       destroy = 2,
-      drop_supplies = 3,
+      supply_drop = 3,
       landing = 4,
   };
 ```
-Now that the mission parameters are more fully fleshed out, we see that there are 4 mission types: you can either photograph or destroy a target. For the special case of secret airstrips, you can also fly over it to drop supplies, or for the ultimate thrill, land on it. This is represented by the C-style enum mission_type, with values possible values from 1 to 4. Notice we can potentially have a landing mission for both the primary and secondary objectives. Normally the game logic would prevent this outcome by automatically selecting a different mission for the secondary objective.
+Now that the mission parameters are more fully fleshed out, we see that there are 4 mission types: you can either photograph or destroy a target. For the special case of secret airstrips, you can also fly over it to drop supplies, or for the ultimate thrill, land on it. This is represented by the C-style enum mission_type, with possible values from 1 to 4. Notice we can potentially have a landing mission for both the primary and secondary objectives. Normally the game logic would prevent this outcome by automatically selecting a different mission for the secondary objective.
 
 Another interesting point is the takeoff and landing targets - normally you would start and end the missions on friendly airstrips. But by specifying the correct hex values for takeoff and landing, you can actually start the mission already in enemy territory! Furthermore, if you specify the secret airstrips as your takeoff and landing targets, you could potentially accomplish a primary or secondary objective without even lifting off! But we're getting a little ahead of ourselves.
 
@@ -60,8 +60,8 @@ Finally, there is the mission number, which is an index to a lookup table. Here 
 ```
   mission 0 - landing - our agents have captured enemy equipment
   mission 1 - landing - guerilla freedom fighters need stinger missiles
-  mission 2 - drop supplies - covert agents lost their arms and equipment
-  mission 3 - drop supplies - guerilla group needs weapons and explosives
+  mission 2 - supply drop - covert agents lost their arms and equipment
+  mission 3 - supply drop - guerilla group needs weapons and explosives
 ```
 In practice, editing the mission targets with Cheat Engine after the mission has already been generated doesn't quite produce the desired results. For example, even though I specified mission type 4, mission target 18, and mission number 0 in the Persian Gulf, the mission description is not quite right.
 
@@ -74,7 +74,7 @@ Here we see the map sector for the airstrip doesn't match the published location
 
 ### Under the hood
 
-In order to fully understand what's going on, we need to load the game in a debugger. Using the old 16-bit DOS debugger debug.exe, I stepped over function calls until I narrowed down the following stack trace:
+In order to fully understand what's going on, we need to load the game in a debugger. Using the old 16-bit DOS debugger debug.com, I stepped over function calls until I narrowed down the following stack trace:
 ```
   cs:028D call 0FA3 - enter briefing room
   cs:0FA9 call 0F4E - show flight plan
@@ -84,6 +84,7 @@ Now we're getting close - when function 4239 returns, new missions will have bee
 ```
   cs:42E9 call 51E8
   cs:42EE mov [E060], ax
+
   cs:43C2 call 512E
   cs:43C8 mov [E072], ax
 ```
@@ -101,11 +102,11 @@ What's happening here is that a target is generated at 51E8, returned in ax, the
   ds:E076 ??
   ds:E078 Secondary Mission Number
 ```
-First, I tried modifying functions 51E8 and 512E to return 18 and 19 respectively, to see what would happen. The game logic would later validate these targets, and ultimately reject one of the airstrip targets by substituting a different target. In this way, you end up with only one landing mission, and the other mission was typically a photograph or destroy mission. Presumably this was done to ensure variety in the randomly generated missions. Even though my modification forced a secret airstrip as a mission target, in practice I observed that the game would almost always choose mission type 3 (drop supplies) for it, rather than the desired type 4.
+First, I tried modifying functions 51E8 and 512E to return 18 and 19 respectively, to see what would happen. The game logic would later validate these targets, and ultimately reject one of the airstrip targets by substituting a different target. In this way, you end up with only one landing mission, and the other mission was typically a photograph or destroy mission. Presumably this was done to ensure variety in the randomly generated missions. Even though my modification forced a secret airstrip as a mission target, in practice I observed that the game would almost always choose mission type 3 (supply drop) for it, rather than the desired type 4.
 
 Also, although my modification was partially successful for Libya and the Persian Gulf, it failed miserably in the North Cape. What ended up happening in the North Cape was that function 4239 would go into an infinite loop. I think the reason might be that it was unable to find a substitue target to satisfy the mission requirements - my question was, why was the North Cape theater the only one affected? I didn't really have an answer, but we will come back to this question later.
 
-So directly hacking functions 51E8 and 512E didn't seem like a viable approach, and I needed a better way. There is a special relationship between the mission type, mission target, and the mission number. Since missions 0-3 involve secret airstrips, that limits the allowed mission types and mission targets. For example, missions 0 and 1 are both landing missions, so the mission type must be 4. Furthermore, the mission target must be either 18 or 19 in the Persian Gulf. Since missions 2 and 3 are drop missions, the mission type must be 3. So the list of possibile Primary mission parameters for the Persian Gulf goes something like this (ignoring any takeoff target):
+So directly hacking functions 51E8 and 512E didn't seem like a viable approach, and I needed a better way. There is a special relationship between the mission type, mission target, and the mission number. Since missions 0-3 involve secret airstrips, that limits the allowed mission types and mission targets. For example, missions 0 and 1 are both landing missions, so the mission type must be 4. Furthermore, the mission target must be either 18 or 19 in the Persian Gulf. Since missions 2 and 3 are supply drop missions, the mission type must be 3. So the list of possibile Primary mission parameters for the Persian Gulf goes something like this (ignoring any takeoff target):
 ```
   ds:E05E 04, 18, any, ??, 00
   ds:E05E 04, 19, any, ??, 00
