@@ -1,6 +1,6 @@
 # Hacking-F117A
 
-My investigation into mission generation in the Stealth Fighter games by Microprose.
+My investigation into mission generation in the Stealth Fighter games by Microprose. [New! Part 2 - Fixing the bug](./Part2.md)
 
   ![Screenshot](Images/player_000.png)
 
@@ -158,3 +158,5 @@ When you land on the secret airstrip, thereby completing the primary objective, 
 Success! Repeating the experiment with all 4 secret airstrips in Libya and the Persian Gulf gives the same results - I can now choose any of these landing missions on demand.
 
 What about the North Cape? The landing mission simply will not work, even though everything appears ok - the mission descriptions are correct, the special equipment is reserved in the cargo bay, and the mission orders in the simulation are correct. However, no matter how hard I try, I can never get credit for completing the objective. After repeated attempts, I'm starting to suspect that this is a bug in the game. My prevailing theory is that there is a missing property on the 2 secret airstrips in the North Cape, which prevent the simulation from detecting when a mission objective has been compeleted. Are there any Microprose alumni out there who are able to confirm?
+
+[Part 2 - Fixing the bug](./Part2.md)
