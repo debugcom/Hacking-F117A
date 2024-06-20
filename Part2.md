@@ -1,6 +1,8 @@
 # Hacking-F117A - Part 2
 
-We ended Part 1 with a fully functional set of secret airstrip missions for Libya and the Persian Gulf, but the North Cape was not quite working. This time around I will investigate mission generation in F-19 for comparison, and as we shall see, there are a lot of similarities to F-117A. Oh, I will also fix a 34 year old bug in both games - sort of.
+[New! Part 3 - Really fixing the bug](./Part3.md)
+
+We ended Part 1 with a fully functional set of secret airstrip missions for Libya and the Persian Gulf, but the North Cape was not quite working. This time around I will investigate mission generation in F-19 (v435.04) for comparison, and as we shall see, there are a lot of similarities to F-117A. Oh, I will also fix a 34 year old bug in both games - sort of.
 
 
 ### Not so different as we were led to believe, so much the better
@@ -15,10 +17,10 @@ This is almost identical to F-117A, except for the Persian Gulf values.
 
 The mission numbers seem unchanged, but their descriptions are worded a little differently - so the first 4 missions now look like this:
 ```
-  mission 0 - landing - friendly agents have captured equipment
-  mission 1 - landing - guerilla freedom fighters require stinger missiles
-  mission 2 - supply drop - covert agents lost their arms and equipment
-  mission 3 - supply drop - guerilla group needs more weapons and explosives
+  mission 0 - landing - "friendly agents have captured equipment ..."
+  mission 1 - landing - "guerilla freedom fighters require stinger missiles ..."
+  mission 2 - supply drop - "covert agents lost their arms and equipment ..."
+  mission 3 - supply drop - "guerilla group needs more weapons and explosives ..."
 ```
 Using debug.com, and our previous experience as a guide, it was pretty easy to find the addresses for the mission parameters:
 ```
@@ -86,7 +88,7 @@ Going back to F-117A, and assuming the North Cape data was bad, let's substitute
 
   ![Screenshot](Images/start_014.png)
 
-Hmm, the airstrip appears to be in the middle of the water off the coast of Norway, and the map sector WX67 is incorrect. However, if this was the Persian Gulf map, the location of the airstrip at JZ67 would be right about there in the upper left corner. If we accept the mission, we end up sitting in the middle of the water, but we are able to complete the primary objective anyway (note I had No Crashes enabled).
+Hmm, the airstrip appears to be in the middle of the water off the coast of Norway, and the map sector WX67 is incorrect. However, if this was the Persian Gulf map, the location of the airstrip at JZ67 would be right there in the upper left corner. If we accept the mission, we end up sitting in the middle of the water, but we are able to complete the primary objective anyway (note I had No Crashes enabled).
 
   ![Screenshot](Images/vgame_014.png)
 
@@ -96,7 +98,7 @@ What this tells me is that as long as we have good data, the secret airstrip mis
 
   ![Screenshot](Images/nc_wld.png)
 
-Upon casual inspection, the data appears to be in 16 byte rows, possibly indexed by target number. Recall that the hex values for the secret airstrips in the Persian Gulf are 18 and 19, whereas in the North Cape they are 1E and 1F. In pg.wld, the sequential lines 190 and 1A0 appear to be different from the surrounding lines, while in nc.wld, the lines 1F0 and 200 appear different. Could it be as easy as copying a few bytes from one file to the other? Yes! It turns out that changing the 08 to 09 at offset 1F1 and 201 in nc.wld is all we need to do - a 2 byte fix! A quick inspection of the Libya lb.wld file confirms the value should be 09.
+Upon casual inspection, the data appears to be in 16 byte rows, possibly indexed by target number. Recall that the hex values for the secret airstrips in the Persian Gulf are 18 and 19, whereas in the North Cape they are 1E and 1F. In pg.wld, lines 190 and 1A0 appear to be different from the surrounding lines, while in nc.wld, lines 1F0 and 200 appear different. Could it be as easy as copying a few bytes from one file to the other? Yes! It turns out that changing the 08 to 09 at offset 1F1 and 201 in nc.wld is all we need to do - a 2 byte fix! A quick inspection of the Libya lb.wld file confirms the value should be 09.
 
 
 ### Conclusion
@@ -108,3 +110,5 @@ With our patch in place (for both games), we can now get credit for landing on t
   ![Screenshot](Images/vgame_015.png)
 
 Although I fixed the bug in the North Cape data, in truth it may be a masked bug because I don't recall ever being offered a secret airstrip mission for the North Cape in the first place.
+
+[New! Part 3 - Really fixing the bug](./Part3.md)
