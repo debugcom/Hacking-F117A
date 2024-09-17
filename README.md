@@ -1,6 +1,7 @@
 # Hacking-F117A
 
-My investigation into mission generation in the Stealth Fighter games by Microprose.  
+My investigation into mission generation in the Stealth Fighter games by Microprose.
+
 [Part 2 - Fixing the bug (sort of)](./Part2.md)  
 [Part 3 - Really fixing the bug](./Part3.md)  
 [New! Part 4 - Fixing F-19 as well](./Part4.md)
