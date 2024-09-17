@@ -271,4 +271,4 @@ Now we are ready - let's load up our patched game and see what happens. Don't fo
 
   ![Screenshot](Images/start_021.png)
 
-Mission accomplished! It looks like Microprose deliberately removed the secret airstrip missions from Libya and the Persian Gulf, but by changing 8 bytes in 3 files, we can get the option again.
+Mission accomplished! It looks like Microprose deliberately removed the secret airstrip missions from Libya and the North Cape, but by changing 8 bytes in 3 files, we can get the option again.
