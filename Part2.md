@@ -1,6 +1,6 @@
 # Hacking-F117A - Part 2
 
-[New! Part 3 - Really fixing the bug](./Part3.md)
+[Part 3 - Really fixing the bug](./Part3.md)
 
 We ended Part 1 with a fully functional set of secret airstrip missions for Libya and the Persian Gulf, but the North Cape was not quite working. This time around I will investigate mission generation in F-19 (v435.04) for comparison, and as we shall see, there are a lot of similarities to F-117A. Oh, I will also fix a 34 year old bug in both games - sort of.
 
@@ -111,4 +111,4 @@ With our patch in place (for both games), we can now get credit for landing on t
 
 Although I fixed the bug in the North Cape data, in truth it may be a masked bug because I don't recall ever being offered a secret airstrip mission for the North Cape in the first place.
 
-[New! Part 3 - Really fixing the bug](./Part3.md)
+[Part 3 - Really fixing the bug](./Part3.md)
