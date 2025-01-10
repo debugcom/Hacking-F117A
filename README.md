@@ -2,9 +2,10 @@
 
 My investigation into mission generation in the Stealth Fighter games by Microprose.
 
-[Part 2 - Fixing the bug (sort of)](./Part2.md)  
-[Part 3 - Really fixing the bug](./Part3.md)  
-[New! Part 4 - Fixing F-19 as well](./Part4.md)
+[Part 1 - This document](./README.md) May 11 2022  
+[Part 2 - Fixing the bug (sort of)](./Part2.md) May 24 2022  
+[Part 3 - Really fixing the bug](./Part3.md) Jun 20 2024  
+[Part 4 - Fixing F-19 as well](./Part4.md) Sep 17 2024  
 
   ![Screenshot](Images/player_000.png)
 
@@ -163,6 +164,7 @@ Success! Repeating the experiment with all 4 secret airstrips in Libya and the P
 
 What about the North Cape? The landing mission simply will not work, even though everything appears ok - the mission descriptions are correct, the special equipment is reserved in the cargo bay, and the mission orders in the simulation are correct. However, no matter how hard I try, I can never get credit for completing the objective. After repeated attempts, I'm starting to suspect that this is a bug in the game. My prevailing theory is that there is a missing property on the 2 secret airstrips in the North Cape, which prevent the simulation from detecting when a mission objective has been completed. Are there any Microprose alumni out there who are able to confirm?
 
+[Part 1 - This document](./README.md)  
 [Part 2 - Fixing the bug (sort of)](./Part2.md)  
 [Part 3 - Really fixing the bug](./Part3.md)  
-[New! Part 4 - Fixing F-19 as well](./Part4.md)
+[Part 4 - Fixing F-19 as well](./Part4.md)  

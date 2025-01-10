@@ -1,6 +1,6 @@
 # Hacking-F117A - Part 3
 
-[New! Part 4 - Fixing F-19 as well](./Part4.md)
+[Part 4 - Fixing F-19 as well](./Part4.md)
 
 We ended Part 2 with the ability to manually insert a set of secret airstrip mission parameters via a debugger, and this allowed us to play and complete the mission objectives in all 3 theaters where the secret airstrip was documented. However, we were not able to figure out why the missions were not being offered in the first place - until now. We will finally address this problem once and for all.
 
@@ -275,4 +275,4 @@ Now we are ready - let's load up our patched game and see what happens. Don't fo
 
 Mission accomplished! It looks like Microprose deliberately removed the secret airstrip missions from Libya and the North Cape, but by changing 8 bytes in 3 files, we can get the option again.
 
-[New! Part 4 - Fixing F-19 as well](./Part4.md)
+[Part 4 - Fixing F-19 as well](./Part4.md)
